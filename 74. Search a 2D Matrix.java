@@ -1,5 +1,23 @@
 class Solution {
+
     public boolean searchMatrix(int[][] matrix, int target) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) return false;
+        int rows = matrix.length;
+        int i = rows - 1;
+        int j = 0;
+        while (i >= 0 && j < matrix[0].length) {
+            if (matrix[i][j] > target) {
+                i--;
+            } else if (matrix[i][j] < target) {
+                j++;
+            } else if (matrix[i][j] == target) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean searchMatrix2(int[][] matrix, int target) {
         if (matrix == null || matrix.length == 0 || matrix[0].length == 0) return false;
 
         //find row
