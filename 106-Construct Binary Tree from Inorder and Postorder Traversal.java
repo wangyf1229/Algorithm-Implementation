@@ -8,26 +8,25 @@
  * }
  */
 class Solution {
-    int pInorder;
-    int pPostorder;
     public TreeNode buildTree(int[] inorder, int[] postorder) {
-        pInorder = inorder.length - 1;
-        pPostorder = postorder.length - 1;
-        return helper(inorder, postorder, null);
+        int inEnd = inorder.length - 1;
+        int postEnd = postorder.length - 1;
+        return helper(0, postEnd, 0, inEnd, inorder, postorder);
     }
 
-    public TreeNode helper(int[] inorder, int[] postorder, TreeNode end) {
-        if (pPostorder < 0) {
-            return null;
+    public TreeNode helper(int postStart, int postEnd, int inStart, int inEnd, int[] inorder, int[] postorder) {
+        if (postEnd < postStart || inEnd < inStart) return null;
+        TreeNode root = new TreeNode(postorder[postEnd]);
+        postEnd--;
+        int inIndex = 0;
+        for(int i = inStart; i <= inEnd; i++) {
+            if (inorder[i] == root.val) {
+                inIndex = i;
+            }
         }
-        TreeNode root = new TreeNode(postorder[pPostorder--]);
-        if (inorder[pInorder] != root.val) {
-            root.right = helper(inorder, postorder, root);
-        }
-        pInorder--;
-        if ((end == null) || (inorder[pInorder] != end.val)) {
-            root.left = helper(inorder, postorder, end);
-        }
+        root.left = helper(postStart, postStart + inIndex - inStart - 1, inStart, inIndex - 1, inorder, postorder);
+        root.right = helper(postStart + inIndex - inStart, postEnd, inIndex + 1, inEnd, inorder, postorder);
         return root;
+
     }
 }

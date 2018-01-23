@@ -9,22 +9,23 @@
  */
 class Solution {
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        return helper(0, 0, inorder.length - 1, preorder, inorder);
+        int preEnd = preorder.length - 1;
+        int inEnd = inorder.length - 1;
+        return helper(0, preEnd, 0, inEnd, preorder, inorder);
     }
 
-    public TreeNode helper(int preStart, int inStart, int inEnd, int[] preorder, int[] inorder) {
-        if (preStart > preorder.length - 1 || inStart > inEnd) {
-            return null;
-        }
+    public TreeNode helper(int preStart, int preEnd, int inStart, int inEnd, int[] preorder, int[] inorder) {
+        if (preEnd < preStart || inEnd < inStart) return null;
         TreeNode root = new TreeNode(preorder[preStart]);
+        preStart++;
         int inIndex = 0;
         for (int i = inStart; i <= inEnd; i++) {
             if (inorder[i] == root.val) {
                 inIndex = i;
             }
         }
-        root.left = helper(preStart + 1, inStart, inIndex - 1, preorder, inorder);
-        root.right = helper(preStart + inIndex - inStart + 1, inIndex + 1, inEnd, preorder, inorder);
+        root.left = helper(preStart, preStart + inIndex - inStart - 1, inStart, inIndex - 1, preorder, inorder);
+        root.right = helper(preStart + inIndex - inStart, preEnd, inIndex + 1, inEnd, preorder, inorder);
         return root;
     }
 }
