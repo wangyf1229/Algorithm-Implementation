@@ -1,38 +1,43 @@
-public class Solution {
+class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
-        List<List<Integer>> result = new LinkedList<List<Integer>>();
-        if (nums == null || nums.length == 0) return result;
+        List<List<Integer>> res = new ArrayList<>();
+        if (nums == null || nums.length == 0) return res;
         Arrays.sort(nums);
-        for (int i = 0; i < nums.length; i++) {
-            if (i > 0 && nums[i] == nums[i-1]) continue;
-            result = TwoSum(i + 1, nums.length - 1, -nums[i], nums, result);
+        int s = 0;
+        while (s < nums.length) {
+            twoSum(nums, -nums[s], s + 1, res);
+            while (s < (nums.length - 1) && nums[s] == nums[s + 1]  ) {
+                s++;
+            }
+            s++;
         }
-        return result;
+        return res;
     }
 
-    public List<List<Integer>> TwoSum(int left, int right, int target, int[] numbers, List<List<Integer>> result) {
-        while (left < right) {
-            int sum = numbers[left] + numbers[right];
-            if (sum < target) {
-                left++;
-            } else if (sum > target) {
-                right--;
-            } else if (sum == target) {
-                List<Integer> resultTmp = new LinkedList<>();
-                resultTmp.add(-target);
-                resultTmp.add(numbers[left]);
-                resultTmp.add(numbers[right]);
-                result.add(resultTmp);
-                left++;
-                right--;
-                while (left < right && numbers[left] == numbers[left-1]){
-                    left++;
+    public void twoSum(int[] nums, int target, int start, List<List<Integer>> res) {
+        int lo = start;
+        int hi = nums.length - 1;
+        while (lo < hi) {
+            if (nums[lo] + nums[hi] == target) {
+                List<Integer> list = new ArrayList<>();
+                list.add(-target);
+                list.add(nums[lo]);
+                list.add(nums[hi]);
+                res.add(list);
+                while (lo < hi && nums[lo] == nums[lo + 1]) {
+                    lo++;
                 }
-                while (left < right && numbers[right] == numbers[right + 1]) {
-                    right--;
+                while (lo < hi && nums[hi] == nums[hi - 1]) {
+                    hi--;
                 }
+                lo++;
+                hi--;
+
+            } else if (nums[lo] + nums[hi] < target) {
+                lo++;
+            } else if (nums[lo] + nums[hi] > target) {
+                hi--;
             }
         }
-        return result;
     }
 }

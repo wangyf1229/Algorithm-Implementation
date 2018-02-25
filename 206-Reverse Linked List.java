@@ -33,3 +33,16 @@ class Solution {
         return reverseListHelper(temp, head);
     }
 }
+
+//recursive
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        if (head == null || head.next == null) return head;
+        //tail recursion
+        ListNode nextNode = head.next;
+        ListNode newHead = reverseList(nextNode);
+        head.next = null;
+        nextNode.next = head;
+        return newHead;
+    }
+}
