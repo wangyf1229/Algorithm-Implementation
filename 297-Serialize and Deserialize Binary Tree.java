@@ -11,48 +11,51 @@ public class Codec {
 
     // Encodes a tree to a single string.
     public String serialize(TreeNode root) {
-        if (root == null) return "";
         Queue<TreeNode> queue = new LinkedList<>();
-        StringBuffer strB = new StringBuffer();
         queue.offer(root);
+        StringBuilder sb = new StringBuilder();
         while (!queue.isEmpty()) {
-            TreeNode root_temp = queue.poll();
-            if (root_temp == null) {
-                strB.append("null ");
+            TreeNode node = queue.poll();
+            if (node == null) {
+                sb.append("null");
+                sb.append(", ");
             } else {
-                strB.append(root_temp.val + " ");
-            }
-            if (root_temp != null) {
-                queue.offer(root_temp.left);
-                queue.offer(root_temp.right);
+                sb.append(node.val);
+                sb.append(", ");
+                queue.offer(node.left);
+                queue.offer(node.right);
             }
         }
-        return strB.toString();
+        return sb.toString();
     }
 
     // Decodes your encoded data to tree.
     public TreeNode deserialize(String data) {
-        if (data == "") return null;
-        String[] nodes = data.split(" ");
-        TreeNode root = new TreeNode(Integer.parseInt(nodes[0]));
+        String[] array = data.split(", ");
         Queue<TreeNode> queue = new LinkedList<>();
+        if (array[0].equals("null")) return null;
+        TreeNode root = new TreeNode(Integer.parseInt(array[0]));
         queue.offer(root);
-        for (int i = 1; i < nodes.length; i++) {
-            TreeNode temp = queue.poll();
-            if (! nodes[i].equals("null")) {
-                TreeNode left = new TreeNode(Integer.parseInt(nodes[i]));
-                temp.left = left;
-                queue.offer(left);
+        int idx = 1;
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            String leftValue = array[idx];
+            if (!leftValue.equals("null")) {
+                TreeNode leftNode = new TreeNode(Integer.parseInt(array[idx]));
+                node.left = leftNode;
+                queue.offer(leftNode);
             }
-            if (! nodes[++i].equals("null")) {
-                TreeNode right = new TreeNode(Integer.parseInt(nodes[i]));
-                temp.right = right;
-                queue.offer(right);
+            idx++;
+            String rightValue = array[idx];
+            if (!rightValue.equals("null")) {
+                TreeNode rightNode = new TreeNode(Integer.parseInt(array[idx]));
+                node.right = rightNode;
+                queue.offer(rightNode);
             }
+            idx++;
         }
         return root;
     }
-
 }
 
 // Your Codec object will be instantiated and called as such:
