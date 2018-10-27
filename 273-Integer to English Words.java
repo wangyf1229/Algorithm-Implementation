@@ -3,34 +3,36 @@ class Solution {
         if (num == 0) return "Zero";
         int count = 0;
         String[] countArray = new String[]{"", "Thousand", "Million", "Billion"};
-        String res = new String();
-        while( num > 0) {
+        StringBuilder res = new StringBuilder();
+        while (num > 0) {
             int remainder = num % 1000;
-            String output = transferThreeNumbers(remainder);
+            String output = helper(remainder);
             if (!output.equals("")) {
-                res = output + " " + countArray[count] + " " + res;
+                res.insert(0, output + " " + countArray[count] + " ");
             }
             num = num/1000;
             count++;
         }
-        return res.trim();
+        return res.toString().trim();
     }
     
-    public String transferThreeNumbers(int num) {
+    public String helper(int num) {
         String[] arrayUnder20 = new String[]{"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
         String[] tens = new String[]{"", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
-        String first = num < 100 ? arrayUnder20[0] : arrayUnder20[num/100] + " Hundred";
+        StringBuilder sb = new StringBuilder();
+        
+        int h = num/100;
+        if (h != 0) sb.append(arrayUnder20[h] + " Hundred");
+        
+        //The reason of trim here is because you don't know whether you add Hundred before or not
         int remainder = num % 100;
-        String secThird = "";
         if (remainder < 20) {
-            secThird = arrayUnder20[remainder];
-        } else {
-            int unitsDigit = remainder % 10;
-            int tensDigit = remainder / 10;
-            secThird = tens[tensDigit] + " " + arrayUnder20[unitsDigit];
-        }
-        String result = first + " " + secThird;
-        return result.trim();
-    }
-    
+            sb.append(" " + arrayUnder20[remainder]);
+            return sb.toString().trim();
+        }        
+        int u = remainder % 10;
+        int t = remainder / 10;
+        sb.append(" " + tens[t] + " " + arrayUnder20[u]);
+        return sb.toString().trim();
+    } 
 }
